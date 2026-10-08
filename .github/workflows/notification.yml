@@ -1,0 +1,18 @@
+name: Notification workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  validate-configuration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Validate notification configuration
+        run: |
+          if [ -f "./notification-config.json" ]; then
+            node -e 'const c = require("./notification-config.json"); if (!c.email || !c.subject || !c.comment) process.exit(1); console.log("Notification configuration is ready.")'
+          else
+            echo "No notification config is present; skipping validation."
+          fi
